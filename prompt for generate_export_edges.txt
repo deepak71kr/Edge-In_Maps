@@ -1,0 +1,145 @@
+
+=============MAIN PROMPT==============================================================
+
+Prompt:
+
+Act as a Senior Front-End Developer. Create a tool (HTML + CSS + Vanilla JS) for building a custom Cartesian Map.
+
+1. The Canvas & Coordinate System:
+
+Use an HTML5 Canvas that fills the window.
+
+Coordinate Logic: Implement a "Math/Geo-Algebra" Cartesian system.
+
+(0,0) is at the center of the screen initially.
+
+Y-Axis: UP is Positive (+), DOWN is Negative (-).
+
+X-Axis: RIGHT is Positive (+), LEFT is Negative (-).
+
+Navigation:
+
+Zoom: Mouse wheel zooms in/out relative to the cursor position.
+
+Pan: Middle-mouse button click-and-drag moves the view.
+
+2. Drawing Logic:
+
+Action: Left-click and drag to draw an "Edge".
+
+Snapping: Coordinates should snap to the nearest integer (for clean data).
+
+Visuals:
+
+While dragging, show a preview line and the length of the edge.
+
+Edges can overlap (e.g., two rooms sharing a wall).
+
+Rooms: The user can click a "New Room" button to logically separate the next set of edges into a new group, but visually they appear on the same map.
+
+3. UI & Display:
+
+Mouse Tooltip: When hovering, display the current Cartesian world coordinates (x, y) floating right next to the mouse cursor.
+
+Fixed Display: Also display the current coordinates in a fixed box at the bottom-left of the screen.
+
+Controls (Top-Left Panel):
+
+Color Picker (to change the color of the next edge drawn).
+
+"New Room" button.
+
+"Undo" button (removes last edge).
+
+"Export Data" button.
+
+4. Data Structure & Export:
+
+Internal Data: Store an array of Room objects.
+
+Export Format: When "Export Data" is clicked, download a .txt file.
+
+Schema: The text file must use this specific array structure for edges, dropping the "x/y" keys:
+
+JSON
+[
+  {
+    "roomId": 0,
+    "edges": [
+       [ [x1, y1], [x2, y2] ],
+       [ [x3, y3], [x4, y4] ]
+    ]
+  }
+]
+
+5. Tech constraints
+can use any library
+just to do the bare minimum temprory solution of generate data points for edges for testing for some other project
+
+
+
+
+=======ADDITIONAL PROMPT ========================================================================
+(for better ui, auto room changing and color)
+
+Here is the add-on prompt. You can paste this right after the previous instructions.
+
+Additional Feature Requirements:
+
+1. Auto-Room Completion & Coloring
+
+Cycle Detection: Implement logic to detect when a newly drawn edge connects back to the very first vertex of the current room (closing the polygon).
+
+Action on Close: When a room is closed:
+
+Automatically mark the current room as complete.
+
+Immediately initialize a New Room index.
+
+Auto-Color: Automatically generate a distinct, random color for this new room (do not require manual color picking).
+
+2. Grid & Axis Labels
+
+Axis Labels: Draw numerical labels (e.g., 10, 20, -10, -20) along the X and Y axes.
+
+Adaptive Visibility: Ensure these labels do not get cluttered. As the user zooms out, increase the step size (e.g., from 10 to 50 to 100) so the text remains readable and sparse.
+
+Style: Use a light, non-intrusive color (e.g., #666) for the text.
+
+3. Interaction Tools (Draw vs. Move)
+
+Tool Toggle: Add a UI toggle (Radio buttons or "Hand" vs "Pencil" icons) to switch between "Draw Mode" and "Move Mode".
+
+Draw Mode: Left-click drags to create edges.
+
+Move Mode: Left-click drags to pan the map (instead of creating edges).
+
+Visual Feedback: Change the cursor to grab when in Move Mode and crosshair when in Draw Mode.
+
+
+===========ADDITIONAL PROMPT=====================
+(for general room walls orientation)
+
+Additional Feature Requirements:
+
+1. Orthogonal Drawing (Axis Snapping)
+
+Behavior: Since most rooms are rectangular, implement an "Orthogonal Snap" feature.
+
+When drawing an edge, force the line to snap to the nearest axis (purely horizontal or purely vertical) based on the mouse angle.
+
+Override: Allow the user to hold the Shift key to disable this snapping (allowing free-form diagonal lines).
+
+2. Room & Edge Counters
+
+Real-time Stats: Add a distinct counter in the UI panel that displays:
+
+Total Rooms: The number of completed rooms.
+
+Current Room Edges: The number of edges drawn for the active room.
+
+Total Edges: The total number of edges in the entire map.
+
+3. Point Generation Refinement
+
+Precision: Ensure that when orthogonal snapping is active, the x or y coordinate of the end point exactly matches the start point (e.g., if start is [10, 5] and mouse is near [20, 6], force it to [20, 5]). This guarantees perfectly straight walls for the data export.
